@@ -4,6 +4,7 @@ require 'mechanize'
 require 'logger'
 
 #setup variables
+#requires Yahoo Small Business account.
 @url = 'http://smallbusiness.yahoo.com/ecommerce/'
 @store_list = 'http://store.yahoo.com/index4.html'
 @login = ''
@@ -85,15 +86,44 @@ end
   end
 
   #NOTE:
-  # Currently the form hangs up on the security key form.
+  # Currently the form hangs up on the security key form. Only in Windows....... (vista)
   # It just locks up compeltely, not sure why. As long as there isn't a security key form then we are ok.
+  # seems on a *nix system it just doesn't pass validation......
   if @store_manager.forms.length > 0 && @store_manager.uri.to_s.include?("edit.secure.yahoo.com")
     puts "Uh oh, need to enter in the security key"
-    @store_index = @store_manager.form_with(:name => 'a') do |form|
-      if form.has_field?('passwd')
+    @store_manager.forms.each do |form|
+      case form.name
+      when 'login_form'
+        form['passwd'] = @password
+        puts 'submitting login_form'
+        @temp_page = form.click_button
+        break
+      when 'a'
         form['passwd'] = @security_key
+        puts 'submitting a form'
+        @temp_page = form.click_button
+        break
+      else
+        puts form.name
       end
-    end.submit
+    end
+    
+    #not displaying errors.... There may be an issue with how the form is submitted.
+    #it locked me out after "supposedly" entering the wrong SK 3 times.
+    #Verified it was the correct one. There might be a time delay, and that is what is causing 
+    if @temp_page.uri.to_s.include?("edit.secure.yahoo.com")
+      puts 'Failed security key'
+      @temp_page.search("ul font li") do |error|
+        puts "*** " + error
+      end
+      #exit
+      @temp_page.search("html") do |html|
+        puts html.inner_html
+      end
+    else
+      puts 'Passed security key'
+      @store_index = temp_page
+    end
 
     puts "waiting on redirect..."
     sleep 4
@@ -102,19 +132,25 @@ end
   end
 
   #TESTING SECURITY KEY FORM
-
-  #puts 'Inside index'
-  #puts 'Going to contents page'
+=begin
+  puts 'Inside index'
+  puts 'Going to contents page'
   #@store_contents = @store_index.links.text("Contents").click
-  #puts 'gathering templates....'
-  #sleep 2
+  @store_index.links.each do |link|
+    puts link.text
+  end
+  
+  puts 'gathering templates....'
+  sleep 2
   #@store_templates = @store_contents.links.text("Templates").click
-  #
+  #@store_contents.links.each do |link|
+  #  puts link.text
+  #end
+  
   #template_page = Hpricot(open(@store_templates.uri.to_s))
   #puts template_page.search('a').each do |link|
   #  puts link
   #end
-
+=end
   puts "done."
-
 end
