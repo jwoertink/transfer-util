@@ -71,18 +71,22 @@ end
     exit
   end
 
+	puts "Looking at #{@store_manager.uri.to_s}"
   puts 'Looking for Store Editor'
   @store_manager.links.each do |link|
-    if link.text.eql?("Store Editor")
-      puts "Found store editor link"
+		case link.text
+		when "Store Editor"
+		  puts "Found store editor link"
       @store_index = @store_manager.links.text("Store Editor").click
-    elsif link.text.eql?("Store Manager")
+		when "Store Manager"
       puts "Found store manager link, going to store manager"
       @store_manager = @store_manager.links.text("Store Manager").click
       sleep 2
       puts 'Going to Store Editor'
       @store_index = @store_manager.links.text("Store Editor").click
-    end
+		else
+			puts "Couldn't find store manager."
+		end
   end
 
   #NOTE:
@@ -91,6 +95,7 @@ end
   # seems on a *nix system it just doesn't pass validation......
   if @store_manager.forms.length > 0 && @store_manager.uri.to_s.include?("edit.secure.yahoo.com")
     puts "Uh oh, need to enter in the security key"
+		sleep 1
     @store_manager.forms.each do |form|
       case form.name
       when 'login_form'
@@ -122,7 +127,8 @@ end
       end
     else
       puts 'Passed security key'
-      @store_index = temp_page
+			puts "We are in #{@temp_page.uri.to_s}"
+      @store_index = @temp_page
     end
 
     puts "waiting on redirect..."
@@ -132,25 +138,55 @@ end
   end
 
   #TESTING SECURITY KEY FORM
-=begin
+
   puts 'Inside index'
-  puts 'Going to contents page'
-  #@store_contents = @store_index.links.text("Contents").click
+
   @store_index.links.each do |link|
-    puts link.text
+    if link.text.eql?("Store Manager")
+			puts "uh oh, we weren't even in the manager"
+			@new_page = link.click
+			sleep 4
+			puts "we are now at #{@new_page.uri.to_s}"
+
+			@new_page.links.each do |l|
+				if l.text.eql?("Store Editor")
+					puts "found the real index page."
+					@true_index = l.click
+					sleep 4
+					puts "we are now at #{@true_index.uri.to_s}"
+				end
+			end
+		end
   end
-  
+	puts 'Going to try to get to the contents page'
+	@true_index.links.each do |link|
+		if link.text.eql?("Contents")
+			puts 'found it!'
+			@store_contents = @true_index.links.text("Contents").click
+			sleep 2
+			@store_contents.links.each do |l|
+				if l.text.eql?("Templates")
+					puts 'gathering templates....'
+					@store_templates = l.click
+					sleep 2
+				end
+			end
+		end
+	end
+
   puts 'gathering templates....'
   sleep 2
-  #@store_templates = @store_contents.links.text("Templates").click
-  #@store_contents.links.each do |link|
-  #  puts link.text
-  #end
-  
-  #template_page = Hpricot(open(@store_templates.uri.to_s))
-  #puts template_page.search('a').each do |link|
-  #  puts link
-  #end
-=end
+  puts "we are in #{@store_templates.uri.to_s}"
+  template_page = Hpricot(open(@store_templates.uri.to_s))
+
+	if template_page.at("title").inner_html.eql?("Yahoo! Store Editor")
+		template_page.search('a') do |link|
+			puts link
+		end
+	else
+		puts "The Title for this page"
+		puts template_page.at("title").inner_html
+	end
+
   puts "done."
 end
