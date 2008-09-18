@@ -92,7 +92,7 @@ end
   #NOTE:
   # Currently the form hangs up on the security key form. Only in Windows....... (vista)
   # It just locks up compeltely, not sure why. As long as there isn't a security key form then we are ok.
-  # seems on a *nix system it just doesn't pass validation......
+  # seems on a *nix system it is ok. 
   if @store_manager.forms.length > 0 && @store_manager.uri.to_s.include?("edit.secure.yahoo.com")
     puts "Uh oh, need to enter in the security key"
 		sleep 1
@@ -137,8 +137,6 @@ end
     @store_index = @store_manager.links.text("Store Editor").click
   end
 
-  #TESTING SECURITY KEY FORM
-
   puts 'Inside index'
 
   @store_index.links.each do |link|
@@ -161,9 +159,10 @@ end
 	puts 'Going to try to get to the contents page'
 	@true_index.links.each do |link|
 		if link.text.eql?("Contents")
-			puts 'found it!'
-			@store_contents = @true_index.links.text("Contents").click
-			sleep 2
+			puts 'on index, found contents!'
+			@store_contents = link.click
+			puts 'going to look for the templates page'
+			sleep 4
 			@store_contents.links.each do |l|
 				if l.text.eql?("Templates")
 					puts 'gathering templates....'
@@ -171,21 +170,32 @@ end
 					sleep 2
 				end
 			end
+		elsif link.text.eql?("Templates")
+			puts "on contents, found templates!"
+			@store_templates = link.click
+			sleep 2
 		end
 	end
 
-  puts 'gathering templates....'
-  sleep 2
-  puts "we are in #{@store_templates.uri.to_s}"
-  template_page = Hpricot(open(@store_templates.uri.to_s))
+puts 'ok, so where am I at now? ....'
+	@store_templates.links.each do |link|
+				puts link.text
+	end
 
-	if template_page.at("title").inner_html.eql?("Yahoo! Store Editor")
-		template_page.search('a') do |link|
-			puts link
-		end
-	else
-		puts "The Title for this page"
-		puts template_page.at("title").inner_html
+
+  sleep 2
+	unless @store_templates.nil?
+					puts "we are in #{@store_templates.uri.to_s}"
+					template_page = Hpricot(open(@store_templates.uri.to_s))
+
+					if template_page.at("title").inner_html.eql?("Yahoo! Store Editor")
+									template_page.search('a') do |link|
+													puts link
+									end
+					else
+									puts "The Title for this page"
+									puts template_page.at("title").inner_html
+					end
 	end
 
   puts "done."
