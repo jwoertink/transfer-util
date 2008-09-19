@@ -1,4 +1,4 @@
-RTML Transfer Util 0.2 
+RTML Transfer Util 0.3 
 
 Jeremy Woertink (2008)
 
@@ -7,4 +7,5 @@ Note: You need a yahoo small business account for this to work.
 
 
 ******
-stuff
+
+This application currently finds all custom rtml templates.
