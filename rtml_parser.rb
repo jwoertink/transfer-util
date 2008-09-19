@@ -2,8 +2,16 @@ module RTMLParser
 
   class RTML
 
+    require 'rubygems'
+    require 'open-uri'
+    require 'mechanize'
+
     def self.load_file(file)
       @rtml_doc = File.open(file, File::RDONLY)
+    end
+
+    def self.parse_page(page)
+      
     end
 
     def is_param?(item)
