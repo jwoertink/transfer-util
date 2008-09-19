@@ -8,10 +8,10 @@ require 'rtml_parser'
 #requires Yahoo Small Business account.
 @url = 'http://smallbusiness.yahoo.com/ecommerce/'
 @store_list = 'http://store.yahoo.com/index4.html'
-@login = 'vwdjeremy'
-@password = 'mar56jux8'
-@security_key = 'super88dizl'
-@store_id = 'yhst-35296642127615'
+@login = ''
+@password = ''
+@security_key = ''
+@store_id = ''
 
 #setup the browser
 @browser = WWW::Mechanize.new do |agent|
