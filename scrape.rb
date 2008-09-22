@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'open-uri'
 require 'mechanize'
-require 'logger'
+#require 'logger'
 require 'rtml_parser'
 
 #setup variables
@@ -17,7 +17,7 @@ require 'rtml_parser'
 @browser = WWW::Mechanize.new do |agent|
   agent.user_agent_alias = 'Windows Mozilla'
   agent.follow_meta_refresh = true
-  agent.log = Logger.new("scrape.log")
+  #agent.log = Logger.new("scrape.log")
   agent.keep_alive = false
 end
 
@@ -187,7 +187,6 @@ end
   # we can grab all of them and start the next process.
   unless @store_templates.nil?
     @templtates = @store_templates.search('/html/body/p/table[2]/tbody/tr[2]/td[2]//a')
-
     @templates.each do |hpricot_link|
       #template_page = @browser.click(hpricot_link)
       #RTMLParser::RTML.parse_page(template_page)
