@@ -11,7 +11,9 @@ module RTMLParser
     end
 
     def self.parse_page(page)
-      
+      puts "Template name: "
+      element = page.search('/html//body/form/p/b')
+      puts element.text
     end
 
     def is_param?(item)

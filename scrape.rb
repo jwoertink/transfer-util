@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'open-uri'
 require 'mechanize'
-#require 'logger'
+require 'logger'
 require 'rtml_parser'
 
 #setup variables
@@ -17,7 +17,7 @@ require 'rtml_parser'
 @browser = WWW::Mechanize.new do |agent|
   agent.user_agent_alias = 'Windows Mozilla'
   agent.follow_meta_refresh = true
-  #agent.log = Logger.new("scrape.log")
+  agent.log = Logger.new("scrape.log")
   agent.keep_alive = false
 end
 
@@ -123,25 +123,25 @@ end
     # 1. An ad for a store upgrade
     # 2. The Store manager
     # THIS SECTION NOT IN USE....
-    #@store_front.links.each do |link|
-    #  case link.text
-    #  when "Store Editor"
-    #    puts "Found store editor link"
-    #    @store_index = link.click
-    #  when "Store Manager"
-    #    puts "Found store manager link, going to store manager"
-    #    @store_manager = link.click
-    #    sleep 2
-    #    puts 'Going to Store Editor'
-    #    @store_index = @store_manager.links.text("Store Editor").click
-    #  else
-    #    puts "Couldn't find store manager."
-    #  end
-    #end
-    puts "something went wrong."
-    exit
+    @store_front.links.each do |link|
+      case link.text
+      when "Store Editor"
+        puts "Found store editor link"
+        @true_index = link.click
+        break
+      when "Store Manager"
+        puts "Found store manager link, going to store manager"
+        @store_manager = link.click
+        sleep 2
+        puts 'Going to Store Editor'
+        @true_index = @store_manager.links.text("Store Editor").click
+        break
+      else
+        puts "*"
+      end
+    end
   end
-
+=begin
   @store_variable_page.links.each do |link|
     if link.text.eql?("Store Manager")
       puts @store_variable_page.title
@@ -159,6 +159,7 @@ end
       end
     end
   end
+=end  
   puts 'Going to try to get to the contents page'
   @true_index.links.each do |link|
     if link.text.eql?("Contents")
@@ -186,13 +187,19 @@ end
   # As long as we are on the templates page,
   # we can grab all of them and start the next process.
   unless @store_templates.nil?
-    @templtates = @store_templates.search('/html/body/p/table[2]/tbody/tr[2]/td[2]//a')
-    @templates.each do |hpricot_link|
-      #template_page = @browser.click(hpricot_link)
-      #RTMLParser::RTML.parse_page(template_page)
-      puts hpricot_link
+    @templates = @store_templates.search('/html//body/p/table[2]/tr[2]/td//a')
+    
+    # This is the xpath Firebug returns. Doesn't seem to work in here...
+    # /html/body/p/table[2]/tbody/tr[2]/td[2]//a
+ 
+    unless @templates.nil?
+      @templates.each do |hpricot_link|
+        puts "."
+        template_page = @browser.click(hpricot_link)
+        RTMLParser::RTML.parse_page(template_page)
+        #puts hpricot_link
+      end
     end
-
   end
 
   puts "done."
