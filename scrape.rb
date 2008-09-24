@@ -17,7 +17,7 @@ require 'rtml_parser'
 @browser = WWW::Mechanize.new do |agent|
   agent.user_agent_alias = 'Windows Mozilla'
   agent.follow_meta_refresh = true
-  agent.log = Logger.new("scrape.log")
+  #agent.log = Logger.new("scrape.log")
   agent.keep_alive = false
 end
 
@@ -44,7 +44,7 @@ end
 
   #give it time to login.
   puts "waiting for redirect..."
-  sleep 4
+  sleep 3
 
   #temp_page will either be a blank page with a single link
   #or redirect you back to the login page because login failed.
@@ -191,10 +191,8 @@ end
 
     # This is the xpath Firebug returns. Doesn't seem to work in here...
     # /html/body/p/table[2]/tbody/tr[2]/td[2]//a
-
     unless @templates.nil?
       @templates.each do |hpricot_link|
-        puts "."
         template_page = @browser.click(hpricot_link)
         RTMLParser::Parser.parse_page(template_page)
         #puts hpricot_link
