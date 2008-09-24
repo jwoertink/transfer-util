@@ -159,7 +159,7 @@ end
       end
     end
   end
-=end  
+=end
   puts 'Going to try to get to the contents page'
   @true_index.links.each do |link|
     if link.text.eql?("Contents")
@@ -188,15 +188,15 @@ end
   # we can grab all of them and start the next process.
   unless @store_templates.nil?
     @templates = @store_templates.search('/html//body/p/table[2]/tr[2]/td//a')
-    
+
     # This is the xpath Firebug returns. Doesn't seem to work in here...
     # /html/body/p/table[2]/tbody/tr[2]/td[2]//a
- 
+
     unless @templates.nil?
       @templates.each do |hpricot_link|
         puts "."
         template_page = @browser.click(hpricot_link)
-        RTMLParser::RTML.parse_page(template_page)
+        RTMLParser::Parser.parse_page(template_page)
         #puts hpricot_link
       end
     end
