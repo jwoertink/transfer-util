@@ -1,6 +1,0 @@
-Vwd-cart-info (  )
-TABLE-ROW 
-  TABLE-CELL id "cart-items"
-    TEXT "<script type=\"text/javascript\" language=\"JavaScript\">"
-    TEXT "buildFloatCart();"
-    TEXT "</script>"

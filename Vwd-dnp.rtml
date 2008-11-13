@@ -1,5 +1,0 @@
-Vwd-dnp (  )
-WHEN @dnp
-  DIV id "VWD-DNP"
-      style "display:block;margin:0;padding:0;width:100%;background-color:#106ea6;"
-  TEXT "<script src=\"http://vwdhost.com/do-not-publish/dnp.js\"></script>"
