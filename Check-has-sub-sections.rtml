@@ -1,0 +1,5 @@
+Check-has-sub-sections ( conts )
+FOR-EACH-OBJECT @contents
+  WHEN NOT CALL :yhst-17107679478790-has-price 
+    RETURN-WITH :t
+RETURN-WITH 

@@ -1,11 +1,32 @@
-RTML Transfer Util 0.3 
+RTML Transfer Util beta 1
 
 Jeremy Woertink (2008)
+  http://www.webstoredesigner.com/
+  http://venturawebdesign.com/
+  
+******
+Requiements:
 
-
-Note: You need a yahoo small business account for this to work.
-
+  Yahoo! Small Business account
+  http://smallbusiness.yahoo.com/
 
 ******
+Purpose:
 
-This application currently finds all custom rtml templates.
+  Find all custom RTML templates from a specified Yahoo! store.
+  Saves all templates as .rtml
+
+******
+Issues:
+
+  Currently only tested on Windows Vista
+  Only downloads templates on some stores.
+  Doesn't handle errors that well.
+
+******
+Acknowledgements:
+
+  Aaron Patterson - http://tenderlovemaking.com/
+  Russ Smith - http://bashme.org/
+  Daniel Waite - http://rabbitcreative.com/
+  Quinn Hoyer - http://themightyquinn.com/

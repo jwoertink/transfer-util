@@ -1,0 +1,66 @@
+Vwd-item-order ( itempage )
+TABLE border 0
+      align :left
+      cellspacing 0
+      cellpadding 0
+      width 300
+      style "background-color:#ececec;border: solid 1px #b2b2b2;text-align:left;"
+  TABLE-ROW 
+    TABLE-CELL class "itemtable-header"
+      TEXT @name
+  TABLE-ROW 
+    TABLE-CELL style "padding:5px;border-bottom:1px solid #b2b2b2;"
+      TEXT STRING-APPEND 
+             @regular-price-text
+             " "
+             GRAB 
+               PRICE number ELEMENT position 0
+                                    sequence @price
+                     currency @currency
+  WHEN @sale-price
+    TABLE-ROW 
+      TABLE-CELL style "color:#cc0001;font-weight:bold;padding:5px;border-bottom:1px solid #b2b2b2;"
+        TEXT STRING-APPEND 
+               @sale-price-text
+               " "
+               GRAB 
+                 CALL :test-st51-ventura-show-price 
+                   @sale-price
+                   itempage
+                   @price-style
+    TABLE-ROW 
+      TABLE-CELL style "color:#cc0001;font-weight:bold;padding:5px;border-bottom:1px solid #b2b2b2;"
+        WITH= variable reg-price
+              value ELEMENT position 0
+                            sequence @price
+          WITH= variable sale-price
+                value ELEMENT position 0
+                              sequence @sale-price
+            WITH= variable you-save
+                  value reg-price - sale-price
+              TEXT "You Save: "
+              TEXT PRICE number AS-NUMBER you-save
+                         currency @currency
+  WHEN NONEMPTY @options
+    CALL :test-st51-ventura-options 
+      itempage
+  WHEN OR 
+         @price
+         @sale-price
+    IF test @orderable
+       then MULTI 
+              TABLE-ROW 
+                TABLE-CELL id "cell-grey"
+                           style "padding:5px;border-bottom:1px solid #b2b2b2;"
+                  TEXT "Quantity: "
+                  INPUT name :vwquantity
+                        type :input
+                        value 1
+                        maxlength 3
+                        size 1
+              TABLE-ROW 
+                TABLE-CELL id "cell-grey"
+                  CALL :vwd-add-to-cart 
+       else TABLE-ROW 
+              TABLE-CELL id "cell-grey"
+                TEXT @out-of-stock-text

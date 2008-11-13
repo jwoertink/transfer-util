@@ -1,0 +1,107 @@
+Vwd-image ( area image h w align headel imgclass )
+WHEN image
+  IF test EQUALS value1 area
+                 value2 "contents"
+     then MULTI 
+            CSS-WITH-LINK class imgclass
+                          destination TO id
+              IMAGE source RENDER image image
+                                  max-height h
+                                  max-width w
+                    alt @name
+                    onmouseout STRING-APPEND 
+                                 "hideInfo('"
+                                 IMAGE-REF image image
+                                 "')"
+                    onmouseover STRING-APPEND 
+                                  "showInfo('"
+                                  IMAGE-REF image image
+                                  "')"
+                    title @name
+            CSS-WITH-LINK class "more-info"
+                          id IMAGE-REF image image
+                          destination "#"
+                          onmouseout STRING-APPEND 
+                                       "hideInfo('"
+                                       IMAGE-REF image image
+                                       "')"
+                          onmouseover STRING-APPEND 
+                                        "showInfo('"
+                                        IMAGE-REF image image
+                                        "')"
+                          onclick "overlay(this.id)"
+              IMAGE source RENDER image @more-info
+     else WHEN AND 
+                 EQUALS value1 area
+                        value2 "text"
+                 POSITION element :image
+                          sequence headel
+            WITH= variable origh
+                  value HEIGHT image
+              WITH= variable origw
+                    value WIDTH image
+                TAG-WHEN tag STRING-APPEND 
+                               "span class=\""
+                               imgclass
+                               "\""
+                         test AND 
+                                NOT EQUALS value1 align
+                                           value2 :center
+                                NOT OR 
+                                      NONEMPTY @code
+                                      CALL :test-st51-ventura-has-price 
+                  TAG-WHEN tag STRING-APPEND 
+                                 "div class=\""
+                                 imgclass
+                                 "\""
+                           test AND 
+                                  EQUALS value1 align
+                                         value2 :center
+                                  NOT OR 
+                                        NONEMPTY @code
+                                        CALL :test-st51-ventura-has-price 
+                    IF test AND 
+                              OR 
+                                 value1 h
+                                  value2 origh
+                                 value1 w
+                                  value2 origw
+                              NOT EQUALS value1 @type
+                                         value2 :main.
+                       then MULTI 
+                              TAG-WHEN tag STRING-APPEND 
+                                             "a href=javascript:popup('enlarge.html?"
+                                             IMAGE-REF image image
+                                             "')"
+                                       test AND 
+                                              OR 
+                                                 value1 h
+                                                  value2 origh
+                                                 value1 w
+                                                  value2 origw
+                                              NOT EQUALS value1 @type
+                                                         value2 :main.
+                                IMAGE source RENDER image image
+                                                    max-height h
+                                                    max-width w
+                                      alt @name
+                                      title @name
+                              TAG-WHEN tag STRING-APPEND 
+                                             "a href=javascript:popup('enlarge.html?"
+                                             IMAGE-REF image image
+                                             "')"
+                                       test AND 
+                                              OR 
+                                                 value1 h
+                                                  value2 origh
+                                                 value1 w
+                                                  value2 origw
+                                              NOT EQUALS value1 @type
+                                                         value2 :main.
+                                IMAGE source RENDER image @click-to-enlarge
+                                      style "clear:left;display:block;padding:5px;"
+                       else IMAGE source RENDER image image
+                                                max-height h
+                                                max-width w
+                                  alt @name
+                                  title @name

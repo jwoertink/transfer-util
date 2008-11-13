@@ -1,0 +1,19 @@
+Vwd-header-nav (  )
+CSS-WITH-LINK destination TO :index
+  IMAGE source RENDER image @button-1
+                      max-height 40
+CSS-WITH-LINK destination TO :info
+  IMAGE source RENDER image @button-2
+                      max-height 40
+CSS-WITH-LINK destination TO :faq
+  IMAGE source RENDER image @button-3
+                      max-height 40
+CSS-WITH-LINK destination TO :customer-care
+  IMAGE source RENDER image @button-4
+                      max-height 40
+CSS-WITH-LINK destination TO :contact
+  IMAGE source RENDER image @button-5
+                      max-height 40
+CSS-WITH-LINK destination "http://order.store.yahoo.net/cgi-bin/wg-order?test-st51-ventura"
+  IMAGE source RENDER image @button-6
+                      max-height 40

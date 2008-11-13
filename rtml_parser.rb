@@ -2,13 +2,14 @@ module RTMLParser
 
   # Required libraries
   require 'rubygems'
-  require 'open-uri'
   require 'mechanize'
-  require 'builder'
+  require 'nokogiri'
 
   #RTML class
   # defines the elements of the RTML language
   class RTML
+
+    attr_accessor :current_page
 
     def initialize(page)
       @current_page = page
@@ -45,16 +46,28 @@ module RTMLParser
   # parse and generate the RTML from XML or XML to RTML
   class Parser
 
-    # currently not in use.
-    def self.load_file(file)
-      @rtml_doc = File.open(file, File::RDONLY)
+    attr_accessor :open_file
+    attr_accessor :rtml_doc
+    attr_accessor :xml
+
+    @@open_file = false
+
+    #creates a file to be written to
+    def self.load_file(filename, access)
+      @rtml_doc = File.open(filename, access)
     end
 
     # setup the xml file to be created when files are downloaded
-    def self.setup_xml_file(filename = "test.xml")
-      file = File.open(filename, "w+")
-      @xml = Builder::XmlMarkup.new(:target => file, :indent => 2)
-      @xml.instruct!(:xml, :version => "1.1", :encoding => "US-ASCII")
+    def self.setup_file(filename = "test.rtml")
+      load_file(filename, "w+")
+      @@open_file = true
+    end
+
+    def self.close_file
+      if @@open_file
+        @@open_file = false
+        @rtml_doc.close
+      end
     end
 
     # takes the RTML page and pulls the information it needs from it.
@@ -62,16 +75,39 @@ module RTMLParser
       @rtml = RTML.new(page)
       template_name = page.search('/html//body/form/p/b').text
       template_parameters = page.search('/html//body/form/p/tt').text.sub(/(\()/,"").sub(/(\))/, "")
-      setup_xml_file("#{template_name}.xml")
-      @xml.rtml do
-        @xml.head do
-          @xml.title(template_name)
-          @xml.parameters(template_parameters)
-        end
+      template_body = page.search('/html//body/form//pre')
+      doc = Nokogiri::HTML(<<-eohtml)
+        #{template_body.to_html}
+      eohtml
+
+      setup_file("#{template_name}.rtml")
+      @rtml_doc.write("#{template_name} ( #{template_parameters} )\n")
+      (doc/'pre').first.inner_text.split("\n").each do |line|
+        @rtml_doc.write("#{line}\n")
       end
+      close_file
 
     end
 
+    def self.get_page_from_link(link, options)
+      temp_page = link.click
+      sleep 1
+      if temp_page.title.eql?('Verify your Security Key')
+        form = temp_page.form_with(:name => 'verifyForm')
+        form['skey'] = options['security_key']
+        @key_result_page = form.click_button
+        sleep 3
+
+        if @key_result_page.title.eql?('Verify your Security Key')
+          puts 'Unfortunately, that Security Key is not correct'
+          puts '*** Closing Application ***'
+          exit
+        end
+        temp_page = @key_result_page
+      end
+
+      temp_page
+    end
   end
 
 end

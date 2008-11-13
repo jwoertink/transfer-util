@@ -1,0 +1,25 @@
+Vwd-recently-viewed (  )
+IF test CALL :test-st51-ventura-has-price 
+   then MULTI 
+          TEXT "<script language=\"javascript\">ShowFullTrail(\"Items\")</script>"
+          TEXT "<script language=\"javascript\" type=\"text/javascript\">SaveTrail(\""
+          TEXT LOWERCASE GRAB 
+                           id
+          TEXT "\",\""
+          TEXT @name
+          TEXT "\",\""
+          WITH= variable im
+                value RENDER image @image
+                             max-height @inset-height
+                             max-width @inset-width
+            TEXT IMAGE-REF image im
+          TEXT "\", \"Path\",4,\""
+          WITH= variable saleprice
+                value AS-NUMBER @sale-price
+            WITH= variable ourprice
+                  value AS-NUMBER @price
+              IF test @sale-price
+                 then TEXT saleprice
+                 else TEXT ourprice
+          TEXT "\")</script>"
+   else nil

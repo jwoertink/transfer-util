@@ -1,0 +1,42 @@
+Vwd-display-item ( align headel imgclass )
+WITH= variable itemimg
+      value AND 
+              @image
+              POSITION element :image
+                       sequence headel
+  DIV id "itemarea"
+    TABLE border 0
+          cellspacing 0
+          cellpadding 0
+          width "100%"
+      TABLE-ROW 
+        TABLE-CELL 
+          TABLE border 0
+                cellspacing 0
+                cellpadding 0
+                width 200
+                style "float:left;"
+            TABLE-ROW 
+              TABLE-CELL align :center
+                WHEN itemimg
+                  CALL :vwd-image 
+                    "text"
+                    @image
+                    @item-height
+                    @item-width
+                    align
+                    headel
+                    imgclass
+            IF test @image1
+               then TABLE-ROW 
+                      TABLE-CELL align :left
+                        CALL :vwd-add-images 
+               else nil
+        TABLE-CELL 
+          DIV class STRING-APPEND 
+                      "itemform"
+                      WHEN itemimg
+                        " productInfo"
+              style "float:right;"
+            CALL :test-st51-ventura-orderform 
+              :t

@@ -1,0 +1,28 @@
+Vwd-item-tabs ( mainid headerid header textid text image h w align area headel imgclass )
+DIV id "item-tabs"
+  TAG tag "ul"
+    TAG class "current"
+        id "lidetails"
+        tag "li"
+      CSS-WITH-LINK destination "#"
+                    onclick "switchItemTabs('details');this.blur();return false;"
+        SPAN 
+          TEXT "Product Details"
+    TAG class "seperator"
+        tag "li"
+      SPAN 
+        TEXT " | "
+    TAG class "notcurrent"
+        id "lireviews"
+        tag "li"
+      CSS-WITH-LINK destination "#"
+                    onclick "switchItemTabs('reviews');this.blur();return false;"
+        SPAN 
+          TEXT "Product Reviews"
+DIV id "item-contentarea"
+  DIV class "TabContentOn"
+      id "switchDetails"
+    TEXT @caption
+  DIV class "TabContentOff"
+      id "switchReviews"
+    CALL :vwd-reviews 

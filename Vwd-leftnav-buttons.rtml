@@ -1,0 +1,52 @@
+Vwd-leftnav-buttons ( conts )
+WITH= variable path
+      value GET-PATH-TO dst id
+                        src :index
+  WITH= variable show-subnav
+        value :t
+    FOR-EACH-OBJECT conts
+      IF test AND 
+                show-subnav
+                >= value1 POSITION element id
+                                   sequence path
+                   value2 1
+         then DIV class "leftnav-button-open"
+                CSS-WITH-LINK title IF test NONEMPTY @abstract
+                                       then @abstract
+                                       else @name
+                              destination TO id
+                  TEXT IF test NONEMPTY @abstract
+                          then @abstract
+                          else @name
+         else DIV class "leftnav-button"
+                CSS-WITH-LINK title IF test NONEMPTY @abstract
+                                       then @abstract
+                                       else @name
+                              destination TO id
+                  TEXT IF test NONEMPTY @abstract
+                          then @abstract
+                          else @name
+      WHEN AND 
+             show-subnav
+             >= value1 POSITION element id
+                                sequence path
+                value2 1
+        TAG-WHEN tag "div class=\"leftnav-sub-buttons\""
+                 test CALL :check-has-sub-sections 
+          FOR-EACH-OBJECT @contents
+            WHEN NOT CALL :test-st51-ventura-has-price 
+              TAG-WHEN tag "div class=\"leftnav-current\""
+                       test IF test AND 
+                                      show-subnav
+                                      >= value1 POSITION element id
+                                                         sequence path
+                                         value2 1
+                               then :t
+                               else nil
+                CSS-WITH-LINK title IF test NONEMPTY @abstract
+                                       then @abstract
+                                       else @name
+                              destination TO id
+                  TEXT IF test NONEMPTY @abstract
+                          then @abstract
+                          else @name

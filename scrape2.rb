@@ -5,13 +5,13 @@ require 'nokogiri'
 require 'logger'
 require 'rtml_parser'
 
-#Setup variables
+#Setup variable
 @login_url = 'http://smallbusiness.yahoo.com/services/index.php'
 @store_list_url = 'http://store.yahoo.com/index4.html'
-@login = ''
-@password = ''
-@security_key = ''
-@store_id = ''
+@login = 'vwdjeremy'
+@password = 'mar56jux8'
+@security_key = 'super88dizl'
+@store_id = 'test-st51-ventura'
 @store_manager_url = "http://us-dc1-edit.store.yahoo.com/RT/MGR.#{@store_id}/doNotRedirectToOFB"
 
 #Setup Browser
@@ -22,7 +22,6 @@ require 'rtml_parser'
   #agent.log = Logger.new("scrape.log")
 end
 
-#Intro and grab starting time
 puts 'Ventura RTML Transfer Util (beta)'
 @start_time = Time.now
 puts "Transfer started at #{@start_time.strftime('%H:%M:%S')}"
@@ -36,7 +35,7 @@ rescue Net::HTTPInternalServerError
   exit
 end
 
-#Fill Login form and submit
+
 puts 'Attempting to login'
 login_result_page = login_page.form_with(:name => 'login_form') do |form|
   form['login'] = @login
@@ -79,8 +78,6 @@ if entry_page.title.eql?('Verify your Security Key')
 
 end
 
-#Go to store manager
-#This section still needs work.. Fails on some stores, but passes on others.
 puts 'Going to store manager'
 entry_page.links.each do |link|
   if link.text.eql?('Store Editor')
@@ -113,8 +110,7 @@ unless templates.nil?
     template_page = @browser.click(hpricot_link)
     RTMLParser::Parser.parse_page(template_page)
   end
-else
-  puts 'No templates to get'
+
 end
 @end_time = Time.now
 puts 'Done!'
