@@ -43,12 +43,12 @@ module RTMLParser
   end
 
   #Parser class
-  # parse and generate the RTML from XML or XML to RTML
+  # grabs the html on RTML template pages, and returns the RTML
+  # then writes it to a file
   class Parser
 
     attr_accessor :open_file
     attr_accessor :rtml_doc
-    attr_accessor :xml
 
     @@open_file = false
 
@@ -57,12 +57,13 @@ module RTMLParser
       @rtml_doc = File.open(filename, access)
     end
 
-    # setup the xml file to be created when files are downloaded
+    # setup the rtml file to be created when files are downloaded
     def self.setup_file(filename = "test.rtml")
       load_file(filename, "w+")
       @@open_file = true
     end
 
+    # close the file.
     def self.close_file
       if @@open_file
         @@open_file = false
@@ -89,6 +90,9 @@ module RTMLParser
 
     end
 
+    # Returns a specified page.
+    # Should always return the page you are looking for based off the link you pass it.
+    # Options is a hash. I'm passing the security key.
     def self.get_page_from_link(link, options)
       temp_page = link.click
       sleep 1

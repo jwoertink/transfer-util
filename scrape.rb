@@ -87,10 +87,10 @@ entry_page.links.each do |link|
     puts 'Going to store editor'
     @result_page = RTMLParser::Parser.get_page_from_link(link, {'security_key' => @security_key})
 
-    if @result_page.links.text('Store Editor')
-      @store_index = @result_page.links.text('Store Editor').click
-    else
+    if @result_page.links.text('Store Editor').empty?
       @store_index = @result_page
+    else
+      @store_index = @result_page.links.text('Store Editor').click
     end
   end
 end
@@ -108,7 +108,7 @@ puts 'Grabbing templates'
 templates = templates_page.search('/html//body/p/table[2]/tr[2]/td//a')
 
 #Create files
-unless templates.nil?
+unless templates.empty? or templates.nil?
   templates.each do |hpricot_link|
     template_page = @browser.click(hpricot_link)
     RTMLParser::Parser.parse_page(template_page)
