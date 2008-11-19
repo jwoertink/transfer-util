@@ -9,36 +9,46 @@ module RTMLParser
   # defines the elements of the RTML language
   class RTML
 
-    attr_accessor :current_page
+    attr_accessor :name
+    attr_accessor :active_file
 
-    def initialize(page)
-      @current_page = page
+    def initialize(filename)
+      @name = filename.sub('.rtml', '')
+      @active_file = File.open(filename, 'r')
     end
 
-    # An operator is an element that can be clicked on
-    # and it can be edited.
-    # takes a string, and returns true if it's an operator.
-    def operator?(item)
-      return (item.is_a?(Hpricot::Elem) and self.respond_to_link?("Edit")) ? true : false
+    def params
+      line = @active_file.readlines[0]
+      params = line[line.index('('), line.length]
+      params = params.gsub(/\(\)/, '')
+      params #=> "(x y h w)\n"
     end
 
-    # An variable is an element that can be clicked on
-    # but it doesn't do anything.
-    # takes a string, and returns true if it's a variable.
-    def variable?(item)
-      return (item.is_a?(Hpricot::Elem) and not self.respond_to_link?("Edit")) ? true : false
-    end
 
-    # A param is not a variable or an operator.
-    # they are Hpricot::Text objects
-    def param?(item)
-      return (!self.operator?(item) and !self.variable?(item)) ? true : false
-    end
-
-    def respond_to_link?(link)
-      return true if @current_page.links.text(link)
-      false
-    end
+    ## An operator is an element that can be clicked on
+    ## and it can be edited.
+    ## takes a string, and returns true if it's an operator.
+    #def operator?(item)
+    #  return (item.is_a?(Hpricot::Elem) and self.respond_to_link?("Edit")) ? true : false
+    #end
+    #
+    ## An variable is an element that can be clicked on
+    ## but it doesn't do anything.
+    ## takes a string, and returns true if it's a variable.
+    #def variable?(item)
+    #  return (item.is_a?(Hpricot::Elem) and not self.respond_to_link?("Edit")) ? true : false
+    #end
+    #
+    ## A param is not a variable or an operator.
+    ## they are Hpricot::Text objects
+    #def param?(item)
+    #  return (!self.operator?(item) and !self.variable?(item)) ? true : false
+    #end
+    #
+    #def respond_to_link?(link)
+    #  return true if @current_page.links.text(link)
+    #  false
+    #end
 
   end
 
@@ -73,7 +83,6 @@ module RTMLParser
 
     # takes the RTML page and pulls the information it needs from it.
     def self.parse_page(page)
-      @rtml = RTML.new(page)
       template_name = page.search('/html//body/form/p/b').text
       template_parameters = page.search('/html//body/form/p/tt').text.sub(/(\()/,"").sub(/(\))/, "")
       template_body = page.search('/html//body/form//pre')
@@ -82,7 +91,7 @@ module RTMLParser
       eohtml
 
       setup_file("#{template_name}.rtml")
-      @rtml_doc.write("#{template_name} ( #{template_parameters} )\n")
+      @rtml_doc.write("#{template_name} (#{template_parameters})\n")
       (doc/'pre').first.inner_text.split("\n").each do |line|
         @rtml_doc.write("#{line}\n")
       end

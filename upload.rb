@@ -103,25 +103,43 @@ types_page = @store_index.links.text('Types').click
 puts 'Going to Templates'
 templates_page = types_page.links.text('Templates').click
 
-#Grab templates
-puts 'Grabbing templates'
-templates = templates_page.search('/html//body/p/table[2]/tr[2]/td//a')
-
-#Create files
-unless templates.empty? or templates.nil?
-  begin
-    Dir.mkdir(@store_id)
-  rescue SystemCallError
-    puts "Cannot create folder named #{@store_id}. Already exists"
+templates_page.links.each do |link|
+  if link.text.eql?('New Template')
+    puts 'On new template form page.'
+    @new_template_form_page = link.click
   end
-  Dir.chdir(@store_id)
-  templates.each do |hpricot_link|
-    template_page = @browser.click(hpricot_link)
-    RTMLParser::Parser.parse_page(template_page)
-  end
-else
-  puts 'No templates to get'
 end
+
+puts "Opening folder #{@store_id}"
+@rtml_folder = Dir.open(@store_id)
+Dir.chdir(@store_id)
+
+@rtml_folder.each do |filename|
+  unless filename.eql?('.') or filename.eql?('..')
+    puts 'Creating new RTML object'
+    @rtml_template = RTMLParser::RTML.new(filename)
+
+    puts "Attempting to create new template called #{@rtml_template.name}"
+    new_form = @new_template_form_page.forms[0]
+    new_form.fields[1].value = @rtml_template.name
+    @rtml_page = new_form.click_button
+
+    #Can't click this link :(
+    #The href for this link is javascript.
+    #Mechanize currently doesn't handle javascript.
+    #Ditching this project in favor of firewatir
+    #
+    puts 'Clicking on ()'
+    #@params_form_page = @rtml_page.links.text('()').click
+
+    puts 'Submitting params form'
+    #param_form = @params_form_page.forms[0]
+    #param_form.fields[1].value = @rtml_template.params
+    #@rtml_page = param_form.click_button
+
+  end
+end
+
 @end_time = Time.now
 puts 'Done!'
 puts "Transfer completed at #{@end_time.strftime('%H:%M:%S')}"
