@@ -16,4 +16,26 @@ end
 
 @browser.link(:title, 'New Template').click
 
-@browser.text_field("/html/body/form/input[2]").set("j-test")
+@browser.text_field(:xpath, "/html/body/form/input[2]").set("j-test")
+
+@browser.button(:value, 'Create').click
+
+@browser.link(:title, 'Edit Parms').click
+
+@browser.text_field(:xpath, "/html/body/form/input[2]").set("x y z")
+
+@browser.button(:value, 'Submit').click
+
+@browser.link(:xpath, '/html/body/form/pre/font/a[4]').click
+
+@browser.link(:title, 'Cut').click
+
+@browser.link(:xpath, '/html/body/form/pre/font/a').click
+
+@browser.link(:title, 'New').click
+
+@browser.select_list(:xpath, '/html/body/form/table/tbody/tr[2]/td[2]/select').select("DIV")
+
+@browser.button(:value, 'Create').click
+
+@browser.link(:title, 'Replace').click
