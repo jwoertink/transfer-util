@@ -125,4 +125,5 @@ end
 @end_time = Time.now
 puts 'Done!'
 puts "Transfer completed at #{@end_time.strftime('%H:%M:%S')}"
+puts "Downloaded #{templates.size} tempaltes."
 puts "Completed in #{(@end_time - @start_time).round} seconds."

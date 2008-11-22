@@ -11,19 +11,26 @@ module RTMLParser
 
     attr_accessor :name
     attr_accessor :active_file
+    attr_accessor :doc
 
     def initialize(filename)
       @name = filename.sub('.rtml', '')
-      @active_file = File.open(filename, 'r')
+      @active_file = File.open(filename, 'r+')
+      @doc = @active_file.readlines
     end
 
     def params
-      line = @active_file.readlines[0]
+      line = @doc[0]
       params = line[line.index('('), line.length]
-      params = params.gsub(/\(\)/, '')
-      params #=> "(x y h w)\n"
+      params = params.gsub(/[\(\)\n]/, '')
+      params
     end
 
+    def first_operator
+      line = @doc[1]
+      return line.split("\302\240")[0]
+      #line.scan(/./u)
+    end
 
     ## An operator is an element that can be clicked on
     ## and it can be edited.
