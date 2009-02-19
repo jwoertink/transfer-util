@@ -11,10 +11,7 @@ Dir.chdir(@upload_folder)
 #setup the browser
 @browser = Watir::IE.find(:title, 'Yahoo! Store Editor')
 
-if @browser.nil?
-  puts 'Cannot find browser window'
-  exit
-end
+puts 'Cannot find browser window' and exit if @browser.nil?
 
 @files.each do |filename|
   unless filename.eql?('.') or filename.eql?('..')
