@@ -3,7 +3,7 @@ require 'watir'
 require 'rtml_parser'
 
 #Setup Variables
-@upload_folder = '' #relative path
+@upload_folder = 'test-st51-ventura' #relative path
 
 @files = Dir.open(@upload_folder)
 Dir.chdir(@upload_folder)

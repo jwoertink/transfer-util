@@ -32,6 +32,15 @@ module RTMLParser
       #line.scan(/./u)
     end
 
+    def elements
+      @doc[1..@doc.length - 1]
+    end
+
+    def paste_within?
+    end
+
+    def paste_after?
+    end
     ## An operator is an element that can be clicked on
     ## and it can be edited.
     ## takes a string, and returns true if it's an operator.

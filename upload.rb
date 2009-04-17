@@ -19,7 +19,7 @@ require 'rtml_parser'
   agent.user_agent_alias = 'Windows Mozilla'
   agent.follow_meta_refresh = true
   agent.keep_alive = false
-  #agent.log = Logger.new("scrape.log")
+  #agent.log = Logger.new("upload.log")
 end
 
 #Intro and grab starting time

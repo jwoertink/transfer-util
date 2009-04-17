@@ -2,13 +2,16 @@ RTML Transfer Util beta 1
 
 Jeremy Woertink (2008)
   http://www.webstoredesigner.com/
-  http://venturawebdesign.com/
-  
+  http://www.venturawebdesign.com/
+
 ******
 Requiements:
 
   Yahoo! Small Business account
   http://smallbusiness.yahoo.com/
+
+  Mechanize < 0.9.0
+  Nokogiri
 
 ******
 Purpose:
@@ -19,7 +22,8 @@ Purpose:
 ******
 Issues:
 
-  Currently only tested on Windows Vista
+  Currently only works on Windows Vista
+  Xpath issues on Mac.
   Only downloads templates on some stores.
   Doesn't handle errors that well.
 
