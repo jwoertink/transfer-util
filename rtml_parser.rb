@@ -36,35 +36,47 @@ module RTMLParser
       @doc[1..@doc.length - 1]
     end
 
-    def paste_within?
+    def list_elements
+      self.elements.each do |line|
+        line.split("\302\240").each do |element|
+          puts element
+        end
+      end
     end
 
-    def paste_after?
+    #use paste-within for element
+    def paste_within?(element)
+      i = 0
+      element.each_byte do |b|
+        if b == 32
+          i += 1
+        end
+      end
+      return true if i > 1
     end
-    ## An operator is an element that can be clicked on
-    ## and it can be edited.
-    ## takes a string, and returns true if it's an operator.
-    #def operator?(item)
-    #  return (item.is_a?(Hpricot::Elem) and self.respond_to_link?("Edit")) ? true : false
-    #end
-    #
-    ## An variable is an element that can be clicked on
-    ## but it doesn't do anything.
-    ## takes a string, and returns true if it's a variable.
-    #def variable?(item)
-    #  return (item.is_a?(Hpricot::Elem) and not self.respond_to_link?("Edit")) ? true : false
-    #end
-    #
-    ## A param is not a variable or an operator.
-    ## they are Hpricot::Text objects
-    #def param?(item)
-    #  return (!self.operator?(item) and !self.variable?(item)) ? true : false
-    #end
-    #
-    #def respond_to_link?(link)
-    #  return true if @current_page.links.text(link)
-    #  false
-    #end
+
+    def paste_after?(element)
+      return !paste_within?(element)
+    end
+
+    #an operator is an RTML operator.
+    #these are all caps with no special characters except
+    # <, <=, <=>, >, >=, and some words may be separated with a hyphen -
+    def operator?(item)
+      return item.eql?(item.match(/[A-Z\-<>(>=)(<=)(<=>)]+/m).to_s) ? true : false
+    end
+
+    #an item is a variable if it's NOT an operator and it doesn't begin with a pipe |
+    def variable?(item)
+      return (!self.operator?(item) and !self.param?(item)) ? true : false
+    end
+
+    #a param is like an attribute to an operator.
+    #these are all lower case, sometimes with a hyphen or number in them.
+    #the rtml files place pipes in front of them for better parsing.
+    def param?(item)
+      return item.eql?(item.match(/[|a-z0-9-]+/m).to_s) ? true : false
+    end
 
   end
 
