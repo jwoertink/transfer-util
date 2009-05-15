@@ -102,8 +102,14 @@ module RTMLParser
       template_name = page.search('/html//body/form/p/b').text
       template_parameters = page.search('/html//body/form/p/tt').text.sub(/(\()/,"").sub(/(\))/, "")
       template_body = page.search('/html//body/form//pre')
+      t = template_body.to_html.gsub(/[;|\s][a-zA-Z-]+[&|\s]/m) { |match|
+        if match != " return "
+          val = %{|#{match.scan(/[a-zA-Z-]+/).first}}
+          match.gsub(/[a-zA-Z-]+/, val)
+        end
+      }
       doc = Nokogiri::HTML(<<-eohtml)
-        #{template_body.to_html}
+        #{t}
       eohtml
 
       setup_file("#{template_name}.rtml")

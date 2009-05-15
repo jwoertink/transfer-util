@@ -1,8 +1,6 @@
-RTML Transfer Util beta 1
+RTML Transfer Util 0.5.2
 
-Jeremy Woertink (2008)
-  http://www.webstoredesigner.com/
-  http://www.venturawebdesign.com/
+Jeremy Woertink (2009)
 
 ******
 Requiements:
@@ -16,16 +14,16 @@ Requiements:
 ******
 Purpose:
 
-  Find all custom RTML templates from a specified Yahoo! store.
-  Saves all templates as .rtml
+  Upload and Download custom RTML templates from the yahoo store
 
 ******
 Issues:
 
   Currently only works on Windows Vista
   Xpath issues on Mac.
-  Only downloads templates on some stores.
-  Doesn't handle errors that well.
+  Only downloads templates
+
+  refactor refactor refactor
 
 ******
 Acknowledgements:
